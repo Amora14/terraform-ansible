@@ -56,10 +56,7 @@ jobs:
 
       - name: Terraform Apply # Executa o Terraform para provisionar a VM e as regras de firewall
         id: tf_apply # Dá um ID para este passo para poder capturar suas saídas
-        run: terraform apply -auto-approve \
-             -var="gcp_project_id=${{ env.GCP_PROJECT_ID }}" \
-             -var="ssh_user=${{ env.SSH_USER }}" \
-             -var="ssh_public_key_path=/home/runner/.ssh/id_rsa.pub" # Usa a chave pública padrão do runner
+        run: terraform apply -auto-approve -var="gcp_project_id=${{ env.GCP_PROJECT_ID }}" -var="ssh_user=${{ env.SSH_USER }}" -var="ssh_public_key_path=/home/runner/.ssh/id_rsa.pub"
         working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Get Terraform Outputs # Captura o IP da VM e o usuário SSH das saídas do Terraform
