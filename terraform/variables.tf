@@ -27,3 +27,30 @@ variable "ssh_public_key_path" {
   type        = string
   default     = "~/.ssh/id_rsa.pub" 
 }
+
+variable "application_port" { 
+  description = "Porta da aplicação a ser liberada no firewall"
+  type        = number
+  default     = 80 # A porta do seu front-end Nginx
+}
+
+
+variable "instance_name" { 
+  description = "Nome da instância VM"
+  type        = string
+  default     = "terraform/ansible"
+}
+
+variable "machine_type" { 
+  description = "Tipo de máquina (CPU/RAM)"
+  type        = string
+  default     = "e2-medium" 
+}
+
+variable "disk_size_gb" { 
+  description = "Tamanho do disco em GB"
+  type        = number
+  default     = 20 
+}
+
+
