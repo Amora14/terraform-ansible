@@ -17,7 +17,10 @@ resource "google_compute_firewall" "allow_application_port" {
   name    = "${var.instance_name}-app-port"
   network = "default"
 
-
+  allow {
+    protocol = "tcp"
+    ports    = [tostring(var.application_port)]
+  }
 
   source_ranges = ["0.0.0.0/0"] 
   target_tags   = ["${var.instance_name}-tag"]
