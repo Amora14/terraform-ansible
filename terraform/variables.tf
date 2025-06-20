@@ -22,11 +22,10 @@ variable "ssh_user" {
   default     = "admin"
 }
 
-variable "ssh_public_key_path" {
-  description = "Caminho para sua chave pública SSH"
+variable "ssh_public_key_content" {
+  description = "Conteúdo da sua chave pública SSH"
   type        = string
-  default     = "~/.ssh/id_rsa.pub" 
-}
+
 
 variable "application_port" { 
   description = "Porta da aplicação a ser liberada no firewall"
