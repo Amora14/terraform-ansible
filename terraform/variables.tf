@@ -25,6 +25,7 @@ variable "ssh_user" {
 variable "ssh_public_key_content" {
   description = "Conteúdo da sua chave pública SSH"
   type        = string
+}
 
 
 variable "application_port" { 
