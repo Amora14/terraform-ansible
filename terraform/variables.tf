@@ -31,14 +31,14 @@ variable "ssh_public_key_path" {
 variable "application_port" { 
   description = "Porta da aplicação a ser liberada no firewall"
   type        = number
-  default     = 80 # A porta do seu front-end Nginx
+  default     = 80 
 }
 
 
 variable "instance_name" { 
   description = "Nome da instância VM"
   type        = string
-  default     = "terraform/ansible"
+  default     = "Terraform-ansible"
 }
 
 variable "machine_type" { 
