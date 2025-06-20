@@ -1,0 +1,110 @@
+---
+- name: Configurar VM e fazer deploy da aplicação
+  hosts: app_servers 
+  become: true     
+  gather_facts: yes  
+
+  vars:
+    app_base_dir: "/home/{{ ansible_user }}/app"
+    
+    app_repo_url: "https://github.com/Amora14/terraform-ansible.git"
+
+    app_repo_branch: "main" 
+
+  tasks:
+    - name: Atualizar pacotes do sistema
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+        autoclean: yes
+        autoremove: yes
+
+    - name: Instalar pacotes essenciais
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+        - python3-pip
+        - python3-setuptools
+        - git
+
+    - name: Instalar módulo 'docker' para Ansible (via pip)
+      ansible.builtin.pip:
+        name: docker
+        state: present
+        executable: pip3
+
+    - name: Adicionar chave GPG oficial do Docker
+      ansible.builtin.shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg"
+      args:
+        creates: /usr/share/keyrings/docker-archive-keyring.gpg
+
+    - name: Adicionar repositório Docker APT
+      ansible.builtin.shell: "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null"
+      args:
+        creates: /etc/apt/sources.list.d/docker.list
+
+    - name: Instalar Docker Engine
+      ansible.builtin.apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+
+    - name: Instalar Docker Compose (como plugin do Docker CLI)
+      ansible.builtin.get_url:
+        url: https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64
+        dest: /usr/local/lib/docker/cli-plugins/docker-compose
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Adicionar o usuário SSH ao grupo docker
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Garantir que o diretório base da aplicação exista
+      ansible.builtin.file:
+        path: "{{ app_base_dir }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Clonar ou atualizar o repositório da aplicação na VM
+      ansible.builtin.git:
+        repo: "{{ app_repo_url }}"
+        dest: "{{ app_base_dir }}"
+        version: "{{ app_repo_branch }}"
+        update: yes 
+        force: yes  
+      become: no 
+      notify: "Rodar docker-compose up"
+
+    - name: Criar arquivo .env com variáveis do banco de dados na VM
+      ansible.builtin.template:
+        src: templates/env.j2
+        dest: "{{ app_base_dir }}/.env" # Caminho de destino na VM
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
+      vars:
+       
+        MYSQL_ROOT_PASSWORD: "{{ lookup('env', 'MYSQL_ROOT_PASSWORD') }}"
+        MYSQL_DATABASE_NAME: "{{ lookup('env', 'MYSQL_DATABASE_NAME') }}"
+        MYSQL_USERNAME: "{{ lookup('env', 'MYSQL_USERNAME') }}"
+        MYSQL_PASSWORD: "{{ lookup('env', 'MYSQL_PASSWORD') }}"
+      notify: "Rodar docker-compose up" 
+
+  handlers:
+    - name: Rodar docker-compose up
+      community.docker.docker_compose:
+        project_src: "{{ app_base_dir }}" 
+        state: present 
+      become: yes 

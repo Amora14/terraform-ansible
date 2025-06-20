@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0 
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # 'senha3078'
+      MYSQL_DATABASE: ${MYSQL_DATABASE_NAME}    # 'integrador'
+      MYSQL_USER: ${MYSQL_USERNAME}             # 'root'
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}         #  'senha3078'
+    ports:
+      - "3306:3306" 
+    volumes:
+      - db_data:/var/lib/mysql 
+    networks:
+      - app-network
+    restart: unless-stopped 
+
+  backend:
+    build:
+      context: ./sistema-inte-main # Caminho para o diretorio do seu Dockerfile do back-end
+      dockerfile: Dockerfile
+      args:
+
+        DATABASE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE_NAME} # 'db'  o nome do serviço MySQL no Docker Compose
+        DATABASE_USERNAME: ${MYSQL_USERNAME}
+        DATABASE_PASSWORD: ${MYSQL_PASSWORD}
+    container_name: backend-app
+    ports:
+      - "5000:5000" 
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE_NAME}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      - db 
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./front-residencial # Caminho para o diretorio do seu Dockerfile do front-end
+      dockerfile: Dockerfile
+    container_name: frontend-app
+    ports:
+      - "80:80" 
+    depends_on:
+      - backend# Garante que o backend comece a subir antes do frontend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  db_data: 
+
+networks:
+  app-network:
+    driver: bridge 
