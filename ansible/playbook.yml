@@ -104,7 +104,7 @@
 
   handlers:
     - name: Rodar docker-compose up
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: "{{ app_base_dir }}" 
         state: present 
       become: yes 
