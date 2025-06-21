@@ -23,10 +23,9 @@ variable "ssh_user" {
 }
 
 variable "ssh_public_key_content" {
-  description = "Conteúdo da sua chave pública SSH"
+  description = "Conteúdo da sua chave pública SSH para a VM"
   type        = string
 }
-
 
 variable "application_port" { 
   description = "Porta da aplicação a ser liberada no firewall"
