@@ -80,7 +80,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh # Garante que o diretório .ssh existe
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa # Define permissões seguras para a chave privada
+          chmod 600 ~/.ssh/id_rsa 
           ssh-keyscan -H ${{ env.INSTANCE_IP }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Create Ansible Inventory # Cria o arquivo de inventário dinâmico para o Ansible
@@ -94,7 +94,7 @@ jobs:
         working-directory: ${{ env.ANSIBLE_WORKING_DIR }} 
 
       - name: Run Ansible Playbook # Executa o playbook Ansible
-        run: ansible-playbook -i inventory.ini ./playbook.yaml 
+        run: ansible-playbook -i inventory.ini ./playbook.yml 
         working-directory: ${{ env.ANSIBLE_WORKING_DIR }}
         env:
           MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
