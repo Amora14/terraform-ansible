@@ -85,10 +85,13 @@ jobs:
 
       - name: Create Ansible Inventory # Cria o arquivo de inventário dinâmico para o Ansible
         run: |
+          TEMPLATE_PATH="inventory.ini.template"
+          INVENTORY_PATH="inventory.ini"
+          
           sed -e "s|{{ instance_ip }}|${{ env.INSTANCE_IP }}|g" \
               -e "s|{{ ssh_user }}|${{ env.SSH_USER_OUTPUT }}|g" \
-              ${{ env.ANSIBLE_WORKING_DIR }}/inventory.ini.template > ${{ env.ANSIBLE_WORKING_DIR }}/inventory.ini
-        working-directory: ${{ env.ANSIBLE_WORKING_DIR }} # Executa o comando no diretório 'ansible/'
+              "${TEMPLATE_PATH}" > "${INVENTORY_PATH}" 
+        working-directory: ${{ env.ANSIBLE_WORKING_DIR }} 
 
       - name: Run Ansible Playbook # Executa o playbook Ansible
         run: ansible-playbook -i inventory.ini playbook.yaml
