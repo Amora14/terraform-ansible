@@ -97,11 +97,12 @@
 
     - name: Criar arquivo .env com variáveis do banco de dados na VM
       ansible.builtin.template:
-        src: "{{ playbook_dir }}/templates/env.j2" 
+        src: "{{ lookup('env', 'GITHUB_WORKSPACE') }}/ansible/templates/env.j2" 
         dest: "{{ app_base_dir }}/.env"
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: '0600'
+0'
       vars:
        
         MYSQL_ROOT_PASSWORD: "{{ lookup('env', 'MYSQL_ROOT_PASSWORD') }}"
