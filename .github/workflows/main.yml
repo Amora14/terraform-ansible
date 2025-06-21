@@ -100,7 +100,7 @@ jobs:
           MYSQL_PASSWORD: ${{ env.MYSQL_PASSWORD }}
           ANSIBLE_HOST_KEY_CHECKING: "False" # Desativa a verificação de hostkey para VMs efêmeras (CUIDADO em produção, mas comum em testes de CI/CD)
 
-      # --- Destruir a VM (Opcional: para testes e evitar custos) ---
+      # --- Destruir a VM (Opcional: para testes e evitar custos) ---j
       # Descomente este bloco se você quiser que a VM seja automaticamente destruída
       # após cada execução BEM-SUCEDIDA da pipeline. Muito útil para aprender e evitar custos.
       # - name: Terraform Destroy (Optional - for ephemeral environments)
