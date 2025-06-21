@@ -7,7 +7,7 @@
   vars:
     app_base_dir: "/home/{{ ansible_user }}/app"
     
-    app_repo_url: "https://github.com/Amora14/terraform-ansible.git"
+    app_repo_url: "https://github.com/Amora14/mensal-4.git"
 
     app_repo_branch: "main" 
 
