@@ -55,8 +55,8 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }} # Executa o comando no diretório 'terraform/'
 
       - name: Terraform Apply # Executa o Terraform para provisionar a VM e as regras de firewall
-        id: tf_apply # Dá um ID para este passo para poder capturar suas saídas
-        run: terraform apply -auto-approve -var="gcp_project_id=${{ env.GCP_PROJECT_ID }}" -var="ssh_user=${{ env.SSH_USER }}" -var="ssh_public_key_path=/home/runner/.ssh/id_rsa.pub"
+        id: tf_apply
+        run: terraform apply -auto-approve -var="gcp_project_id=${{ env.GCP_PROJECT_ID }}" -var="ssh_user=${{ env.SSH_USER }}" -var="ssh_public_key_content=$(cat /home/runner/.ssh/id_rsa.pub)"
         working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Get Terraform Outputs # Captura o IP da VM e o usuário SSH das saídas do Terraform
@@ -64,8 +64,8 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y jq # Garante que 'jq' esteja instalado para processar JSON
           terraform output -json > terraform_outputs.json # Exporta as saídas do Terraform como JSON
-          echo "INSTANCE_IP=$(cat terraform_outputs.json | jq -r '.instance_ip.value')" >> $GITHUB_ENV # Extrai o IP e o define como var de ambiente
-          echo "SSH_USER_OUTPUT=$(cat terraform_outputs.json | jq -r '.ssh_user.value')" >> $GITHUB_ENV # Extrai o usuário SSH e define como var de ambiente
+          echo "INSTANCE_IP=$(cat terraform_outputs.json | jq -r '.instance_ip.value')" >> $GITHUB_ENV # Extrai o IP e o define como var de ambient
+          echo "SSH_USER_OUTPUT=$(cat terraform_outputs.json | jq -r '.ssh_user.value')" >> $GITHUB_ENV 
         working-directory: ${{ env.TF_WORKING_DIR }}
 
       # --- Configuração e Execução do Ansible ---
