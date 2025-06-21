@@ -94,9 +94,9 @@ jobs:
         working-directory: ${{ env.ANSIBLE_WORKING_DIR }} 
 
       - name: Run Ansible Playbook # Executa o playbook Ansible
-        run: ansible-playbook -i inventory.ini playbook.yaml
+        run: ansible-playbook -i inventory.ini ./playbook.yaml 
         working-directory: ${{ env.ANSIBLE_WORKING_DIR }}
-        env: # Passa as variáveis de ambiente para o Ansible (especialmente para o template .env do MySQL)
+        env:
           MYSQL_ROOT_PASSWORD: ${{ env.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE_NAME: ${{ env.MYSQL_DATABASE_NAME }}
           MYSQL_USERNAME: ${{ env.MYSQL_USERNAME }}
