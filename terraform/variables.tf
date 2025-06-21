@@ -37,7 +37,7 @@ variable "application_port" {
 variable "instance_name" { 
   description = "Nome da instância VM"
   type        = string
-  default     = "Terraform-ansible"
+  default     = "terraform-ansible"
 }
 
 variable "machine_type" { 
