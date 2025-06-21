@@ -97,7 +97,7 @@
 
     - name: Criar arquivo .env com variáveis do banco de dados na VM
       ansible.builtin.template:
-        src: templates/env.j2
+        src: env.j2
         dest: "{{ app_base_dir }}/.env" # Caminho de destino na VM
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
