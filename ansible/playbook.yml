@@ -54,6 +54,14 @@
         name: docker-ce
         state: present
         update_cache: yes
+        
+    - name: Criar diretório para plugins do Docker CLI
+      ansible.builtin.file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory # Garante que o caminho é um diretório
+        mode: '0755'     # Permissões padrão para diretórios
+        owner: root      # O owner será root
+        group: root      # O grupo será root
 
     - name: Instalar Docker Compose (como plugin do Docker CLI)
       ansible.builtin.get_url:
