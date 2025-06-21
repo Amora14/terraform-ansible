@@ -74,7 +74,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - run: pip install ansible community.docker # Instala Ansible e o módulo Docker necessário
+      - run: pip install ansible docker # <--- Correção aqui: instale 'docker', não 'community.docker' diretamente
 
       - name: Configure SSH Private Key for Ansible # Configura a chave privada SSH do runner para o Ansible
         run: |
