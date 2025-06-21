@@ -19,7 +19,7 @@ variable "gcp_zone" {
 variable "ssh_user" {
   description = "Usuário para acesso SSH"
   type        = string
-  default     = "admin"
+  default     = "amora"
 }
 
 variable "ssh_public_key_content" {
