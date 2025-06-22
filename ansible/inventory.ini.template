@@ -1,2 +1,0 @@
-[app_servers]
-{{ instance_ip }} ansible_user={{ ssh_user }} ansible_python_interpreter=/usr/bin/python3
